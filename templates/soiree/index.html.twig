@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Soirées</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="p-6 font-sans">
+
+    <h1 class="text-2xl font-bold mb-6 text-center">
+        Gestion des soirées
+    </h1>
+
+    <div class="max-w-md mx-auto mb-10">
+
+        <h2 class="text-lg font-semibold mb-4">Ajouter une soirée</h2>
+
+        {{ form_start(form) }}
+
+        <div class="mb-3">
+            {{ form_label(form.titre) }}
+            {{ form_widget(form.titre, {'attr': {'class': 'border w-full p-1'}}) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.dateSoiree) }}
+            {{ form_widget(form.dateSoiree, {'attr': {'class': 'border w-full p-1'}}) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.dateCreation) }}
+            {{ form_widget(form.dateCreation, {'attr': {'class': 'border w-full p-1'}}) }}
+        </div>
+
+        <button class="border px-3 py-1">
+            Ajouter
+        </button>
+
+        {{ form_end(form) }}
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+
+        <h2 class="text-lg font-semibold mb-4">Liste des soirées</h2>
+
+        <ul class="space-y-2">
+
+            {% for soiree in soirees %}
+                <li class="border p-2 flex justify-between items-center">
+
+                    <div>
+                        <strong>{{ soiree.titre }}</strong><br>
+                        <span class="text-sm">
+                            {{ soiree.dateSoiree|date('d/m/Y') }}
+                        </span>
+                    </div>
+
+                    <div class="text-sm">
+                        <a href="/soiree/{{ soiree.id }}/update" class="mr-2 underline">Modifier</a>
+                        <a href="/soiree/{{ soiree.id }}/supprimer" class="underline">Supprimer</a>
+                    </div>
+
+                </li>
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+</body>
+</html>
