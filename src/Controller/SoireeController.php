@@ -3,97 +3,67 @@
 namespace App\Controller;
 
 use App\Entity\Soiree;
+use App\Form\SoireeType;
+use App\Repository\SoireeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Request;
-use App\Form\SoireeType;
 
-final class SoireeController extends AbstractController
+class SoireeController extends AbstractController
 {
-    //  LISTE DES SOIRÉES
-    #[Route('/soirees', name: 'soiree_list')]
-    public function list(EntityManagerInterface $em): Response
+    #[Route('/soiree', name: 'soiree_index')]
+    public function index(SoireeRepository $repo): Response
     {
-        $soirees = $em->getRepository(Soiree::class)->findAll();
-
-        return $this->json($soirees);
+        return $this->render('soiree/index.html.twig', [
+            'soirees' => $repo->findAll(),
+        ]);
     }
 
-    //  CRÉATION (EN DUR)
-    #[Route('/soiree/creer', name: 'soiree_create')]
-    public function create(EntityManagerInterface $em): Response
+    #[Route('/soiree/new', name: 'soiree_new')]
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $soiree = new Soiree();
 
-        $soiree->setTitre("Soirée mousse");
-        $soiree->setDateSoiree(new \DateTimeImmutable('2026-05-01'));
-        $soiree->setDateCreation(new \DateTimeImmutable());
+        $form = $this->createForm(SoireeType::class, $soiree);
+        $form->handleRequest($request);
 
-        $em->persist($soiree);
-        $em->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($soiree);
+            $em->flush();
 
-        return $this->json([
-            'message' => 'Soirée créée',
-            'id' => $soiree->getId()
+            return $this->redirectToRoute('soiree_index');
+        }
+
+        return $this->render('soiree/new.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
-    //  LIRE UNE SOIRÉE
-    #[Route('/soiree/{id}', name: 'soiree_read')]
-    public function read(Soiree $soiree): Response
+    #[Route('/soiree/{id}/edit', name: 'soiree_edit')]
+    public function edit(Soiree $soiree, Request $request, EntityManagerInterface $em): Response
     {
-        return $this->json($soiree);
-    }
+        $form = $this->createForm(SoireeType::class, $soiree);
+        $form->handleRequest($request);
 
-    //  MODIFIER UNE SOIRÉE
-    #[Route('/soiree/{id}/update', name: 'soiree_update')]
-    public function update(Soiree $soiree, EntityManagerInterface $em): Response
-    {
-        $soiree->setTitre("Soirée modifiée");
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
 
-        $em->flush();
+            return $this->redirectToRoute('soiree_index');
+        }
 
-        return $this->json([
-            'message' => 'Soirée mise à jour'
+        return $this->render('soiree/edit.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
-    //  SUPPRIMER UNE SOIRÉE
-    #[Route('/soiree/{id}/supprimer', name: 'soiree_delete')]
+    #[Route('/soiree/{id}/delete', name: 'soiree_delete')]
     public function delete(Soiree $soiree, EntityManagerInterface $em): Response
     {
         $em->remove($soiree);
         $em->flush();
 
-        return $this->json([
-            'message' => 'Soirée supprimée'
-        ]);
+        return $this->redirectToRoute('soiree_index');
     }
-    #[Route('/soirees', name: 'soiree_list')]
-public function index(Request $request, EntityManagerInterface $em): Response
-{
-    $soirees = $em->getRepository(Soiree::class)->findAll();
-
-    $soiree = new Soiree();
-
-    $form = $this->createForm(SoireeType::class, $soiree);
-
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $soiree->setDateCreation(new \DateTimeImmutable());
-
-        $em->persist($soiree);
-        $em->flush();
-
-        return $this->redirectToRoute('soiree_list');
-    }
-
-    return $this->render('soiree/index.html.twig', [
-        'soirees' => $soirees,
-        'form' => $form->createView(),
-    ]);
-}
 }
