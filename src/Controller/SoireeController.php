@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Factory\SoireeFactory;
+
 
 class SoireeController extends AbstractController
 {
@@ -66,4 +68,11 @@ class SoireeController extends AbstractController
 
         return $this->redirectToRoute('soiree_index');
     }
+#[Route('/seed', name: 'seed')]
+public function seed(): Response
+{
+    SoireeFactory::createMany(10);
+
+    return new Response('Données créées');
+}
 }

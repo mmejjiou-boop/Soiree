@@ -3,51 +3,23 @@
 namespace App\Factory;
 
 use App\Entity\Soiree;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Factory;
 
-/**
- * @extends PersistentProxyObjectFactory<Soiree>
- */
-final class SoireeFactory extends PersistentProxyObjectFactory
+final class SoireeFactory extends Factory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-    }
-
-    #[\Override]
-    public static function class(): string
-    {
-        return Soiree::class;
-    }
-
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
-    #[\Override]
-    protected function defaults(): array|callable
+    protected function getDefaults(): array
     {
         return [
-            'dateCreation' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'dateSoiree' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'titre' => self::faker()->text(255),
+            'titre' => self::faker()->sentence(3),
+            'dateSoiree' => \DateTimeImmutable::createFromMutable(
+                self::faker()->dateTimeBetween('+1 week', '+2 years')
+            ),
+            'dateCreation' => new \DateTimeImmutable(),
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
-    #[\Override]
-    protected function initialize(): static
+    protected static function getClass(): string
     {
-        return $this
-            // ->afterInstantiate(function(Soiree $soiree): void {})
-        ;
+        return Soiree::class;
     }
 }
