@@ -68,11 +68,5 @@ class SoireeController extends AbstractController
 
         return $this->redirectToRoute('soiree_index');
     }
-#[Route('/seed', name: 'seed')]
-public function seed(): Response
-{
-    SoireeFactory::createMany(10);
 
-    return new Response('Données créées');
-}
 }
