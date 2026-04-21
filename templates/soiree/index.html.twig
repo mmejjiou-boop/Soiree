@@ -4,106 +4,69 @@
 
 {% block body %}
 
-<div class="min-h-screen bg-gray-100 py-10">
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Soirées</h1>
 
-    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+    <a href="{{ path('soiree_new') }}"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+        Ajouter une soirée
+    </a>
+</div>
 
-        <!-- TITRE -->
-        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">
-            Soirées
-        </h1>
+<div class="space-y-4">
 
-        <!-- BOUTON AJOUT -->
-        <div class="flex justify-center mb-8">
-            <a href="{{ path('soiree_new') }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition shadow">
-                Ajouter une soirée
-            </a>
-        </div>
+    {% for soiree in soirees %}
+        <div class="bg-white rounded-xl shadow p-5 flex justify-between items-center">
 
-        <!-- LISTE -->
-        <div class="space-y-5">
+            <div>
+                <h2 class="text-xl font-semibold text-gray-800">
+                    {{ soiree.titre }}
+                </h2>
 
-            {% for soiree in soirees %}
+                <p class="text-sm text-gray-500 mt-1">
+                    {{ soiree.dateSoiree|date('d/m/Y H:i') }}
+                </p>
 
-                <div class="bg-gray-50 rounded-xl p-5 shadow-sm hover:shadow-md transition">
+                <p class="text-sm mt-2">
+                    Thème :
+                    <span class="font-medium text-gray-700">
+                        {{ soiree.theme ? soiree.theme.nom : 'Aucun' }}
+                    </span>
+                </p>
 
-                    <div class="flex justify-between items-start">
+                <p class="text-sm mt-2">
+                    DJs :
+                    {% for dj in soiree.djs %}
+                        <span class="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs mr-1">
+                            {{ dj.nom }}
+                        </span>
+                    {% else %}
+                        <span class="text-gray-400">Aucun DJ</span>
+                    {% endfor %}
+                </p>
+            </div>
 
-                        <!-- INFOS -->
-                        <div>
+            <div class="flex gap-3 text-sm">
 
-                            <h2 class="text-xl font-semibold text-gray-800">
-                                {{ soiree.titre }}
-                            </h2>
+                <a href="{{ path('soiree_edit', {id: soiree.id}) }}"
+                   class="text-yellow-600 hover:underline">
+                    Modifier
+                </a>
 
-                            <p class="text-sm text-gray-500 mt-1">
-                                {{ soiree.dateSoiree|date('d/m/Y H:i') }}
-                            </p>
+                <a href="{{ path('soiree_delete', {id: soiree.id}) }}"
+                   class="text-red-600 hover:underline"
+                   onclick="return confirm('Supprimer cette soirée ?')">
+                    Supprimer
+                </a>
 
-                            <!-- DJ -->
-                            <div class="mt-3 text-sm text-gray-700">
-
-                                <span class="font-medium">DJ :</span>
-
-                                {% for dj in soiree.djs %}
-
-                                    <a href="{{ path('app_dj_show', {'id': dj.id}) }}"
-                                       class="text-blue-600 hover:underline">
-                                        {{ dj.nom }}
-                                    </a>
-
-                                    {% if not loop.last %}, {% endif %}
-
-                                {% else %}
-
-                                    <span class="text-gray-400">Aucun DJ</span>
-
-                                {% endfor %}
-
-                            </div>
-
-                        </div>
-
-                        <!-- ACTIONS -->
-                        <div class="flex gap-4 text-sm">
-
-                            <a href="{{ path('soiree_edit', {'id': soiree.id}) }}"
-                               class="text-yellow-600 hover:text-yellow-700">
-                                Modifier
-                            </a>
-
-                            <form method="post"
-                                  action="{{ path('soiree_delete', {'id': soiree.id}) }}"
-                                  onsubmit="return confirm('Supprimer cette soirée ?');">
-
-                                <input type="hidden" name="_token"
-                                       value="{{ csrf_token('delete' ~ soiree.id) }}">
-
-                                <button type="submit"
-                                        class="text-red-600 hover:text-red-700">
-                                    Supprimer
-                                </button>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            {% else %}
-
-                <div class="text-center text-gray-500 py-10">
-                    Aucune soirée disponible
-                </div>
-
-            {% endfor %}
+            </div>
 
         </div>
-
-    </div>
+    {% else %}
+        <div class="bg-white p-6 rounded-xl shadow text-gray-500">
+            Aucune soirée pour le moment
+        </div>
+    {% endfor %}
 
 </div>
 
