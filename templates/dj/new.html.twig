@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Dj{% endblock %}
+
+{% block body %}
+    <h1>Create new Dj</h1>
+
+    {{ include('dj/_form.html.twig') }}
+
+    <a href="{{ path('app_dj_index') }}">retour à la liste</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Dj{% endblock %}
+
+{% block body %}
+    <h1>Edit Dj</h1>
+
+    {{ include('dj/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_dj_index') }}">back to list</a>
+
+    {{ include('dj/_delete_form.html.twig') }}
+{% endblock %}
