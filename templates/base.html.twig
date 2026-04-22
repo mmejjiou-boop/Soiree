@@ -28,7 +28,8 @@
 <div class="flex min-h-screen">
 
     {# SIDEBAR #}
-    <aside class="w-64 bg-white shadow-lg p-6">
+<aside class="w-64 bg-white shadow-lg p-6 flex flex-col justify-between">
+    <div>
         <h1 class="text-xl font-bold mb-6">Dashboard</h1>
 
         <nav class="space-y-3 text-sm">
@@ -44,7 +45,33 @@
                 Thèmes
             </a>
         </nav>
-    </aside>
+    </div>
+
+    {# AUTH SECTION #}
+    <div class="pt-6 border-t">
+        {% if app.user %}
+            <p class="text-xs text-gray-500 mb-2">
+                Connecté : {{ app.user.email }}
+            </p>
+
+            <a href="{{ path('app_logout') }}"
+               class="text-red-600 hover:underline text-sm">
+                Déconnexion
+            </a>
+        {% else %}
+            <a href="{{ path('app_login') }}"
+               class="text-blue-600 hover:underline text-sm block mb-1">
+                Connexion
+            </a>
+
+            <a href="{{ path('app_register') }}"
+               class="text-green-600 hover:underline text-sm">
+                Inscription
+            </a>
+        {% endif %}
+    </div>
+</aside>
+    
 
     {# CONTENT #}
     <main class="flex-1 p-8">
