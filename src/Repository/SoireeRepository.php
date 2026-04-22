@@ -16,28 +16,17 @@ class SoireeRepository extends ServiceEntityRepository
         parent::__construct($registry, Soiree::class);
     }
 
-    //    /**
-    //     * @return Soiree[] Returns an array of Soiree objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Soiree
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Récupère les 3 prochaines soirées à venir
+     */
+    public function findNextThree(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.date >= :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('s.date', 'ASC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
 }

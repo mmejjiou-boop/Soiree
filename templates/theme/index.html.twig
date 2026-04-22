@@ -3,33 +3,53 @@
 {% block title %}Theme index{% endblock %}
 
 {% block body %}
-    <h1>Theme index</h1>
+<div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">Theme index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for theme in themes %}
-            <tr>
-                <td>{{ theme.id }}</td>
-                <td>{{ theme.nom }}</td>
-                <td>
-                    <a href="{{ path('app_theme_show', {'id': theme.id}) }}">show</a>
-                    <a href="{{ path('app_theme_edit', {'id': theme.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full border border-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Id</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Nom</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for theme in themes %}
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-4 py-2">{{ theme.id }}</td>
+                    <td class="px-4 py-2 font-medium text-gray-800">{{ theme.nom }}</td>
+                    <td class="px-4 py-2 flex gap-3">
 
-    <a href="{{ path('app_theme_new') }}">Create new</a>
+                        <a href="{{ path('app_theme_show', {'id': theme.id}) }}"
+                           class="text-blue-500 hover:underline">
+                            Voir
+                        </a>
+
+                        <a href="{{ path('app_theme_edit', {'id': theme.id}) }}"
+                           class="text-yellow-500 hover:underline">
+                            Modifier
+                        </a>
+
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">
+                        Aucun thème trouvé
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-6">
+        <a href="{{ path('app_theme_new') }}"
+           class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow">
+             Créer un nouveau thème
+        </a>
+    </div>
+</div>
 {% endblock %}
