@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Dj;
+use App\Entity\Materiel;
 
 #[ORM\Entity(repositoryClass: SoireeRepository::class)]
 class Soiree
@@ -37,12 +38,19 @@ class Soiree
     #[ORM\ManyToMany(targetEntity: Dj::class, inversedBy: 'soirees')]
     private Collection $djs;
 
+    /**
+     * @var Collection<int, Materiel>
+     */
+    #[ORM\ManyToMany(targetEntity: Materiel::class)]
+    private Collection $materiels;
+
     #[ORM\ManyToOne(inversedBy: 'soirees')]
     private ?Theme $theme = null;
 
     public function __construct()
     {
         $this->djs = new ArrayCollection();
+        $this->materiels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,6 +114,30 @@ class Soiree
         if ($this->djs->removeElement($dj)) {
             $dj->removeSoiree($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Materiel>
+     */
+    public function getMateriels(): Collection
+    {
+        return $this->materiels;
+    }
+
+    public function addMateriel(Materiel $materiel): static
+    {
+        if (!$this->materiels->contains($materiel)) {
+            $this->materiels->add($materiel);
+        }
+
+        return $this;
+    }
+
+    public function removeMateriel(Materiel $materiel): static
+    {
+        $this->materiels->removeElement($materiel);
 
         return $this;
     }

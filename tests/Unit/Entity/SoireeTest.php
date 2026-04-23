@@ -5,6 +5,7 @@ namespace App\Tests\Unit\Entity;
 use PHPUnit\Framework\TestCase;
 use App\Entity\Soiree;
 use App\Entity\Dj;
+use App\Entity\Materiel;
 
 class SoireeTest extends TestCase
 {
@@ -32,5 +33,19 @@ class SoireeTest extends TestCase
         // ASSERT
         $this->assertCount(1, $soiree->getDjs());
         $this->assertSame($dj, $soiree->getDjs()[0]);
+    }
+
+    public function testAjoutMateriel(): void
+    {
+        // ARRANGE
+        $soiree = new Soiree();
+        $materiel = new Materiel();
+
+        // ACT
+        $soiree->addMateriel($materiel);
+
+        // ASSERT
+        $this->assertCount(1, $soiree->getMateriels());
+        $this->assertSame($materiel, $soiree->getMateriels()[0]);
     }
 }
